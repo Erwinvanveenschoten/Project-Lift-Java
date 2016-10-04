@@ -16,94 +16,160 @@ import lift.lib.inf.iLiftKooi;
 
 
 
-
 public class Controller
 {
+	// Variabelen voor motoraansturing
+	static int liftSnelheid = 0;
+	static boolean motorRichting = true;
 	
-	public static int HuidigeVerdieping(){
+	
+	// Wanneer kooiAanvraagVerdiepingX == 0, geen actieve liftaanvraag. Wanneer kooiAanvraagVerdiepingX == 1, wel actieve liftaanvraag.
+	static boolean kooiAanvraagVerdieping0 = false;
+	static boolean kooiAanvraagVerdieping1 = false;
+	static boolean kooiAanvraagVerdieping2 = false;
+	
+	// Wanneer liftAanvraagverdiepingX == 0 is, geen actieve liftaanvraag. Wanneer liftAanvraagVerdieping == 1 is, wel actieve liftaanvraag.
+	static boolean liftAanvraagVerdieping0 = false; 
+	static boolean liftAanvraagVerdieping1 = false;
+	static boolean liftAanvraagVerdieping2 = false;
+	
+	// Variabele voor de huidige locatie
+	static int huidigeLocatie = 404;
+	
+	//Functie om de huidige locatie van de lift op te vragen.
+	public static void HuidigeLocatie(){
 		
 		int RawLocatie = lift.getCagePosition();
 		int Nieuw;
 		switch(RawLocatie){
-		case 0: Nieuw = 0;
+		case 0: Nieuw = 0; // Te laag
 				break;
-		case 1: Nieuw = 1;
+		case 1: Nieuw = 1; // Exact verdieping 0
 				break;
-		case 2: Nieuw = 3;
+		case 3: Nieuw = 2; // Net boven verdieping 0
 				break;
-		case 3: Nieuw = 2;
+		case 2: Nieuw = 3; // Tussen verdieping 0 en 1
 				break;
-		case 4: Nieuw = 7;
+		case 6: Nieuw = 4; // Net onder verdieping 1
 				break;
-		case 5: Nieuw = 6;
+		case 7: Nieuw = 5; // exact verdieping 1
 				break;
-		case 6: Nieuw = 4;
+		case 5: Nieuw = 6; // Net boven Verdieping 1
 				break;
-		case 7: Nieuw = 5;
+		case 4: Nieuw = 7; // Tussen verdieping 1 en 2
 				break;
-		case 12: Nieuw = 8;
+		case 12: Nieuw = 8; // Net onder verdieping 2
 				break;
-		case 13: Nieuw = 9;
+		case 13: Nieuw = 9; // exact verdieping 2
 				break;
-		case 14: Nieuw = 11;
+		case 15: Nieuw = 10; // Net boven verdieping 2
 				break;
-		case 15: Nieuw = 10;
+		case 14: Nieuw = 11; // Te hoog
 				break;
-		default: Nieuw = 404;
+		default: Nieuw = 404; // Alles buiten de genoemde condities
 				break;
 		}
-				return Nieuw;		
+				huidigeLocatie = Nieuw;		
 	}
 
-	public static int aanvraag(){
+	//Functie om de actieve liftaanvragen te bepalen.
+	public static void kooiAanvraag(){
 		
-		int aanvraag;
 		int raw_aanvraag = kooi.getSwitchValues();
 		
 		if(raw_aanvraag == 1){
-			aanvraag = 0;
+			kooiAanvraagVerdieping0 = true;
 		}
 		else if (raw_aanvraag == 2){
-			aanvraag = 1;
+			kooiAanvraagVerdieping1 = true;
 		}
 		else if (raw_aanvraag == 4){
-			aanvraag = 2;
-		}
-		else{
-			aanvraag = -10;
+			kooiAanvraagVerdieping2 = true;
 		}
 		
-		return aanvraag;
 	}
 	
-	public static void leds(int verdieping){
+	//Functie om de actieve kooiaanvraag te bepalen
+	public static void liftAanvraag(){
+		int raw_aanvraag = lift.getSwitches();
+		
+		if(raw_aanvraag == 1){
+			liftAanvraagVerdieping0 = true;
+			liftAanvraagVerdieping1 = false;
+			liftAanvraagVerdieping2 = false;
+		}
+		else if (raw_aanvraag == 2){
+			liftAanvraagVerdieping0 = false;
+			liftAanvraagVerdieping1 = true;
+			liftAanvraagVerdieping2 = false;
+		}
+		else if(raw_aanvraag == 3){
+			liftAanvraagVerdieping0 = true;
+			liftAanvraagVerdieping1 = true;
+			liftAanvraagVerdieping2 = false;
+		}
+		else if (raw_aanvraag == 4){
+			liftAanvraagVerdieping0 = false;
+			liftAanvraagVerdieping1 = false;
+			liftAanvraagVerdieping2 = true;
+		}
+		else if (raw_aanvraag == 5){
+			liftAanvraagVerdieping0 = true;
+			liftAanvraagVerdieping1 = false;
+			liftAanvraagVerdieping2 = true;
+			
+		}
+		else if (raw_aanvraag == 6){
+			liftAanvraagVerdieping0 = false;
+			liftAanvraagVerdieping1 = true;
+			liftAanvraagVerdieping2 = true;
+		}
+		else if (raw_aanvraag == 7){
+			liftAanvraagVerdieping0 = true;
+			liftAanvraagVerdieping1 = true;
+			liftAanvraagVerdieping2 = true;
+		}
+		
+	}
+	
+	//Functie om de liftmotor te versnellen.
+	public static void accelereren(){
+		int i = 0;
+		for (i = 0; i<=9; i++){
+			lift.setMotorSpeed(i);
+			sleep(200);
+		}
+	}
+	
+	//Functie om de leds aan te sturen.
+	public static void ledbesturing(int verdieping){
 		    
-		    
-			System.out.println(verdieping);	
 			//als de lift op verdieping 0 is laat 0 zien op het display
 			if ((verdieping > 0) && (verdieping < 4)){
 				kooi.setLeds(63);
 			}
+			
 			//als de lift op verdieping 1 is laat 1 zien op het display
 			else if ((verdieping > 3) && (verdieping < 8)){
 				kooi.setLeds(6);
 			}
+			
 			//als de lift op verdieping 2 is laat 2 zien op het display
 			else if ((verdieping > 7) && (verdieping < 11)){
 				kooi.setLeds(91);
 			}
+			
 			//anders word er een E weergegeven van error
 			else{
 				kooi.setLeds(121);
 			}
 	}
 
-	
-	
-	
-	
-	
-	
+	//Functie om de Motor aan te sturen
+	public static void motorAansturing(){
+		
+	}
+
 	
     /* Objecten om met de kooi en lift te communiceren */ 
 	static iLiftKooi kooi;
@@ -118,30 +184,7 @@ public class Controller
         /* Communicatie objecten aanmaken */
         kooi = Factory.getLiftKooi("sim");
         lift = Factory.getLift();
-        /* Voeg de eigen code hier toe */
-        while(true){
-        	
-        int verdieping = HuidigeVerdieping();
-        System.out.println(verdieping);
-        
-        leds(verdieping);
-        
-        lift.setMotorDirection(true);
-        int aanvraag = aanvraag();
-        if(aanvraag == 2){
-        if (verdieping == 9){
-        	lift.setMotorSpeed(0);
-        	lift.setDoorOpen();
-        }
-        else{
-            lift.setMotorSpeed(2);
-        }
-//        int Locatie = HuidigeVerdieping(RawLocatie);    
-        
-        }
-        /* 100 mSec wachten */
-        sleep( 100 );
-        }
+
     }
     
     
