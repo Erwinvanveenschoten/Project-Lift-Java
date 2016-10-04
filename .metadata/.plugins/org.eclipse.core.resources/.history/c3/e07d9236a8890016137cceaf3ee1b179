@@ -1,0 +1,102 @@
+package lift.demo;
+
+/* geimporteerde packages */
+import lift.lib.Factory;
+import lift.lib.inf.iLift;
+import lift.lib.inf.iLiftKooi;
+
+/**
+ *
+ * @author JSC
+ * @version 0.1
+ * 
+ */
+
+
+
+
+public class Controller
+{
+	
+//	public static void HuidigeVerdieping(int RawLocatie){
+//		
+//	}
+//
+//		public static void leds(int HuidigeVerdieping)
+//		{
+//		    
+//		    
+//			System.out.println(HuidigeVerdieping);	
+//			//als de lift op verdieping 0 is laat 0 zien op het display
+//			if (HuidigeVerdieping == 0){
+//				kooi.setLeds(63);
+//			}
+//			//als de lift op verdieping 1 is laat 1 zien op het display
+//			else if (HuidigeVerdieping == 1){
+//				kooi.setLeds(6);
+//			}
+//			//als de lift op verdieping 2 is laat 2 zien op het display
+//			else if (HuidigeVerdieping == 2){
+//				kooi.setLeds(91);
+//			}
+//			//anders word er een E weergegeven van error
+//			else{
+//				kooi.setLeds(121);
+//			}
+//		}
+//
+//	
+//	
+//	
+//	
+	
+	
+	
+    /* Objecten om met de kooi en lift te communiceren */ 
+	static iLiftKooi kooi;
+    static iLift lift;
+
+    /**
+     * static void main() is de methode waar alle java programma's mee
+     * opstarten.
+     */
+    public static void main( String[] args )
+    {
+        /* Communicatie objecten aanmaken */
+        kooi = Factory.getLiftKooi("sim");
+        lift = Factory.getLift();
+        
+        /* Voeg de eigen code hier toe */
+        int RawLocatie = lift.getCagePosition();
+        System.out.println(RawLocatie);
+        lift.setMotorSpeed(2);
+//        int Locatie = HuidigeVerdieping(RawLocatie);    
+        
+        
+        /* 100 mSec wachten */
+        sleep( 100 );
+    }
+    
+    
+  
+ 
+   
+    
+    /**
+     * De methode zorgt dat het huidige proces stopt gedurende de tijd
+     * die wordt opgegeven
+     * 
+     * @param msec Aantal millisec  
+     */
+    private static void sleep( int msec )
+    {
+        try
+        {
+            java.lang.Thread.sleep( msec );
+        }
+        catch (InterruptedException ex)
+        {
+            // Doe niets
+        }
+    }
+}
