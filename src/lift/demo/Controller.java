@@ -162,7 +162,7 @@ public class Controller
 		if(huidigeLocatie <= 1){
 			motorRichting = true;
 			if(liftAanvraagVerdieping1 == true){
-				liftSnelheid = 4;
+				liftSnelheid = 2;
 				if (huidigeLocatie == 5){
 					liftSnelheid = 0;
 					liftAanvraagVerdieping1 = false;
@@ -172,7 +172,7 @@ public class Controller
 		if (huidigeLocatie == 5){
 			if(motorRichting == true){
 				if (liftAanvraagVerdieping2 == true){
-					liftSnelheid = 4;
+					liftSnelheid = 2;
 					if (huidigeLocatie == 9){
 						liftSnelheid = 0;
 						liftAanvraagVerdieping2 = false;
@@ -181,7 +181,7 @@ public class Controller
 			}
 			if (liftAanvraagVerdieping0 == true){
 				motorRichting = false;
-				liftSnelheid = 4;
+				liftSnelheid = 2;
 				if(huidigeLocatie == 1){
 					motorRichting = true;
 					liftSnelheid = 0;
@@ -193,7 +193,7 @@ public class Controller
 		if (huidigeLocatie >= 9){
 			motorRichting = false;
 			if(liftAanvraagVerdieping0 == true || liftAanvraagVerdieping1 == true){
-				liftSnelheid = 4;
+				liftSnelheid = 2;
 				if(huidigeLocatie == 5){
 					liftSnelheid = 0;
 					liftAanvraagVerdieping1 = false;
@@ -222,6 +222,7 @@ public class Controller
         	motorAansturing();
         	lift.setMotorSpeed(liftSnelheid);
         	lift.setMotorDirection(motorRichting);
+        	sleep(1);
         }
     }
     
