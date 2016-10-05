@@ -69,6 +69,7 @@ public class Controller
 		default: Nieuw = 404; // Alles buiten de genoemde condities
 				break;
 		}
+				System.out.println(RawLocatie);
 				huidigeLocatie = Nieuw;		
 	}
 
@@ -132,15 +133,6 @@ public class Controller
 		
 	}
 	
-	//Functie om de liftmotor te versnellen.
-	public static void accelereren(){
-		int i = 0;
-		for (i = 0; i<=9; i++){
-			lift.setMotorSpeed(i);
-			sleep(200);
-		}
-	}
-	
 	//Functie om de leds aan te sturen.
 	public static void ledbesturing(int verdieping){
 		    
@@ -167,9 +159,48 @@ public class Controller
 
 	//Functie om de Motor aan te sturen
 	public static void motorAansturing(){
-		
+		if(huidigeLocatie <= 1){
+			motorRichting = true;
+			if(liftAanvraagVerdieping1 == true){
+				liftSnelheid = 4;
+				if (huidigeLocatie == 5){
+					liftSnelheid = 0;
+					liftAanvraagVerdieping1 = false;
+				}
+			}
+		}
+		if (huidigeLocatie == 5){
+			if(motorRichting == true){
+				if (liftAanvraagVerdieping2 == true){
+					liftSnelheid = 4;
+					if (huidigeLocatie == 9){
+						liftSnelheid = 0;
+						liftAanvraagVerdieping2 = false;
+					}
+				}
+			}
+			if (liftAanvraagVerdieping0 == true){
+				motorRichting = false;
+				liftSnelheid = 4;
+				if(huidigeLocatie == 1){
+					motorRichting = true;
+					liftSnelheid = 0;
+					liftAanvraagVerdieping0 = false;
+				}
+			}
+				
+		}
+		if (huidigeLocatie >= 9){
+			motorRichting = false;
+			if(liftAanvraagVerdieping0 == true || liftAanvraagVerdieping1 == true){
+				liftSnelheid = 4;
+				if(huidigeLocatie == 5){
+					liftSnelheid = 0;
+					liftAanvraagVerdieping1 = false;
+				}
+			}
 	}
-
+	}
 	
     /* Objecten om met de kooi en lift te communiceren */ 
 	static iLiftKooi kooi;
@@ -184,7 +215,14 @@ public class Controller
         /* Communicatie objecten aanmaken */
         kooi = Factory.getLiftKooi("sim");
         lift = Factory.getLift();
-
+        while (true){
+        	HuidigeLocatie();
+        	kooiAanvraag();
+        	liftAanvraag();
+        	motorAansturing();
+        	lift.setMotorSpeed(liftSnelheid);
+        	lift.setMotorDirection(motorRichting);
+        }
     }
     
     
