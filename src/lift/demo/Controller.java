@@ -179,7 +179,14 @@ public class Controller
 			if (liftvraag0 == true){
 				liftvraag0 = false;
 				motorspeed = 0;
-				LiftDeuren();
+				while (true){
+					lift.setDoorOpen();
+					sleep(5000);
+					lift.setDoorClose();
+					sleep(5000);
+					if(lift.getDoorSignals()==0)
+						break;
+				}
 				motorRichting = true;
 			}
 			else if (liftvraag1 == true || liftvraag2 == true){
@@ -205,10 +212,12 @@ public class Controller
 				if (liftvraag1 == true && motorspeed != 6){
 					motorspeed = 0;
 					while (true){
-						boolean deurstatus = LiftDeuren();
-						if (deurstatus == true){
+						lift.setDoorOpen();
+						sleep(5000);
+						lift.setDoorClose();
+						sleep(5000);
+						if(lift.getDoorSignals()==0)
 							break;
-						}
 					}
 					liftvraag1 = false;
 				}
@@ -229,10 +238,12 @@ public class Controller
 				if (liftvraag1 == true && motorspeed == 2){
 					motorspeed = 0;
 					while (true){
-						boolean deurstatus = LiftDeuren();
-						if (deurstatus == true){
+						lift.setDoorOpen();
+						sleep(5000);
+						lift.setDoorClose();
+						sleep(5000);
+						if(lift.getDoorSignals()==0)
 							break;
-						}
 					}
 					liftvraag1 = false;
 				}
@@ -273,10 +284,12 @@ public class Controller
 			if (liftvraag2 == true){
 				motorspeed = 0;
 				while (true){
-					boolean deurstatus = LiftDeuren();
-					if (deurstatus == true){
+					lift.setDoorOpen();
+					sleep(5000);
+					lift.setDoorClose();
+					sleep(5000);
+					if(lift.getDoorSignals()==0)
 						break;
-					}
 				}
 				liftvraag2 = false;
 				motorRichting = false;
