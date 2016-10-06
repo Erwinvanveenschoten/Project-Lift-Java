@@ -18,23 +18,43 @@ import lift.lib.inf.iLiftKooi;
 
 public class Controller
 {
+
+    /**
+     * static void main() is de methode waar alle java programma's mee
+     * opstarten.
+     * 
+     **/
+    /* Objecten om met de kooi en lift te communiceren */ 
+	static iLiftKooi kooi;
+    static iLift lift;
+	
+	public static void main( String[] args )
+    {
+        /* Communicatie objecten aanmaken */
+        kooi = Factory.getLiftKooi("sim");
+        lift = Factory.getLift();
+        while (true){
+        	sleep(50);
+        	HuidigeLocatie();
+        	kooiAanvraag();
+        	liftAanvraag();
+        	motorAansturing();
+        	lift.setMotorSpeed(motorspeed);
+        	lift.setMotorDirection(motorRichting);
+        }
+    }
+	
 	// Variabelen voor motoraansturing
-	static int liftSnelheid = 0;
+	static int motorspeed = 0;
 	static boolean motorRichting = true;
 	
-	
-	// Wanneer kooiAanvraagVerdiepingX == 0, geen actieve liftaanvraag. Wanneer kooiAanvraagVerdiepingX == 1, wel actieve liftaanvraag.
-	static boolean kooiAanvraagVerdieping0 = false;
-	static boolean kooiAanvraagVerdieping1 = false;
-	static boolean kooiAanvraagVerdieping2 = false;
-	
-	// Wanneer liftAanvraagverdiepingX == 0 is, geen actieve liftaanvraag. Wanneer liftAanvraagVerdieping == 1 is, wel actieve liftaanvraag.
-	static boolean liftAanvraagVerdieping0 = false; 
-	static boolean liftAanvraagVerdieping1 = false;
-	static boolean liftAanvraagVerdieping2 = false;
+	// Wanneer liftvraagX == 0 is, geen actieve liftaanvraag. Wanneer liftvraag == 1 is, wel actieve liftaanvraag.
+	static boolean liftvraag0 = false; 
+	static boolean liftvraag1 = false;
+	static boolean liftvraag2 = false;
 	
 	// Variabele voor de huidige locatie
-	static int huidigeLocatie = 404;
+	static int huidigeLocatie = 1;
 	
 	//Functie om de huidige locatie van de lift op te vragen.
 	public static void HuidigeLocatie(){
@@ -79,13 +99,13 @@ public class Controller
 		int raw_aanvraag = kooi.getSwitchValues();
 		
 		if(raw_aanvraag == 1){
-			kooiAanvraagVerdieping0 = true;
+			liftvraag0 = true;
 		}
 		else if (raw_aanvraag == 2){
-			kooiAanvraagVerdieping1 = true;
+			liftvraag1 = true;
 		}
 		else if (raw_aanvraag == 4){
-			kooiAanvraagVerdieping2 = true;
+			liftvraag2 = true;
 		}
 		
 	}
@@ -95,40 +115,40 @@ public class Controller
 		int raw_aanvraag = lift.getSwitches();
 		
 		if(raw_aanvraag == 1){
-			liftAanvraagVerdieping0 = true;
-			liftAanvraagVerdieping1 = false;
-			liftAanvraagVerdieping2 = false;
+			liftvraag0 = true;
+			liftvraag1 = false;
+			liftvraag2 = false;
 		}
 		else if (raw_aanvraag == 2){
-			liftAanvraagVerdieping0 = false;
-			liftAanvraagVerdieping1 = true;
-			liftAanvraagVerdieping2 = false;
+			liftvraag0 = false;
+			liftvraag1 = true;
+			liftvraag2 = false;
 		}
 		else if(raw_aanvraag == 3){
-			liftAanvraagVerdieping0 = true;
-			liftAanvraagVerdieping1 = true;
-			liftAanvraagVerdieping2 = false;
+			liftvraag0 = true;
+			liftvraag1 = true;
+			liftvraag2 = false;
 		}
 		else if (raw_aanvraag == 4){
-			liftAanvraagVerdieping0 = false;
-			liftAanvraagVerdieping1 = false;
-			liftAanvraagVerdieping2 = true;
+			liftvraag0 = false;
+			liftvraag1 = false;
+			liftvraag2 = true;
 		}
 		else if (raw_aanvraag == 5){
-			liftAanvraagVerdieping0 = true;
-			liftAanvraagVerdieping1 = false;
-			liftAanvraagVerdieping2 = true;
+			liftvraag0 = true;
+			liftvraag1 = false;
+			liftvraag2 = true;
 			
 		}
 		else if (raw_aanvraag == 6){
-			liftAanvraagVerdieping0 = false;
-			liftAanvraagVerdieping1 = true;
-			liftAanvraagVerdieping2 = true;
+			liftvraag0 = false;
+			liftvraag1 = true;
+			liftvraag2 = true;
 		}
 		else if (raw_aanvraag == 7){
-			liftAanvraagVerdieping0 = true;
-			liftAanvraagVerdieping1 = true;
-			liftAanvraagVerdieping2 = true;
+			liftvraag0 = true;
+			liftvraag1 = true;
+			liftvraag2 = true;
 		}
 		
 	}
@@ -159,73 +179,100 @@ public class Controller
 
 	//Functie om de Motor aan te sturen
 	public static void motorAansturing(){
-		if(huidigeLocatie <= 1){
-			motorRichting = true;
-			if(liftAanvraagVerdieping1 == true){
-				liftSnelheid = 2;
-				if (huidigeLocatie == 5){
-					liftSnelheid = 0;
-					liftAanvraagVerdieping1 = false;
-				}
+		if(huidigeLocatie == 1){
+			if (liftvraag0 == true){
+				liftvraag0 = false;
+				motorspeed = 0;
+				motorRichting = true;
+			}
+			else if (liftvraag1 == true || liftvraag2 == true){
+				motorspeed = 2;
+			}
+		}
+		if (huidigeLocatie == 2){
+			motorspeed = 2;
+		}
+		if (huidigeLocatie == 3){
+			motorspeed = 4;
+		}
+		if (huidigeLocatie == 4){
+			if((liftvraag2 == true && liftvraag1 == false) || (liftvraag0 == true && motorspeed == 8)){
+				motorspeed = 6;
+			}
+			else if (liftvraag0 == false && motorspeed != 6){
+				motorspeed = 2;
 			}
 		}
 		if (huidigeLocatie == 5){
-			if(motorRichting == true){
-				if (liftAanvraagVerdieping2 == true){
-					liftSnelheid = 2;
-					if (huidigeLocatie == 9){
-						liftSnelheid = 0;
-						liftAanvraagVerdieping2 = false;
-					}
+			if (motorRichting == true){
+				if (liftvraag1 == true && motorspeed != 6){
+					motorspeed = 0;
+					liftvraag1 = false;
+				}
+				if(liftvraag2 == true && motorspeed == 6){
+					motorspeed = 8;
+				}
+				if (liftvraag2 == true && motorspeed == 0){
+					motorspeed = 2;
+				}
+				if (motorspeed == 0 && liftvraag2 == false){
+					motorRichting = false;
 				}
 			}
-			if (liftAanvraagVerdieping0 == true){
-				motorRichting = false;
-				liftSnelheid = 2;
-				if(huidigeLocatie == 1){
+			if (motorRichting == false){
+				if (liftvraag1 == true && motorspeed == 6){
+					motorspeed = 8;
+				}
+				if (liftvraag1 == true && motorspeed == 2){
+					motorspeed = 0;
+					liftvraag1 = false;
+				}
+				if (liftvraag0 == true){
+					motorspeed = 2;
+				}
+				if (motorspeed == 0 && liftvraag0 == false){
 					motorRichting = true;
-					liftSnelheid = 0;
-					liftAanvraagVerdieping0 = false;
 				}
-			}
 				
+			}
 		}
-		if (huidigeLocatie >= 9){
-			motorRichting = false;
-			if(liftAanvraagVerdieping0 == true || liftAanvraagVerdieping1 == true){
-				liftSnelheid = 2;
-				if(huidigeLocatie == 5){
-					liftSnelheid = 0;
-					liftAanvraagVerdieping1 = false;
+		if (huidigeLocatie == 6){
+			if (motorRichting == true){
+				if(motorspeed == 8){
+					motorspeed = 6;
+				}
+				else if (motorspeed != 6){
+					motorspeed = 2;
 				}
 			}
-	}
-	}
-	
-    /* Objecten om met de kooi en lift te communiceren */ 
-	static iLiftKooi kooi;
-    static iLift lift;
+			if(motorRichting == false){
+				if(liftvraag0 == true && liftvraag1 == false){
+					motorspeed = 6;
+				}
+				else if (liftvraag1 == true){
+					motorspeed = 2;
+				}
+			}
+		}
+		if (huidigeLocatie == 7){
+			motorspeed = 4;
+		}
+		if (huidigeLocatie == 8){
+			motorspeed = 2;
+		}
+		if (huidigeLocatie == 9){
+			if (liftvraag2 == true){
+				motorspeed = 0;
+				liftvraag2 = false;
+				motorRichting = false;
+			}
+			if (motorRichting == false && (liftvraag1 == true || liftvraag0 == true))
+			{
+				motorspeed = 2;
+			}
+		}
 
-    /**
-     * static void main() is de methode waar alle java programma's mee
-     * opstarten.
-     */
-    public static void main( String[] args )
-    {
-        /* Communicatie objecten aanmaken */
-        kooi = Factory.getLiftKooi("sim");
-        lift = Factory.getLift();
-        while (true){
-        	HuidigeLocatie();
-        	kooiAanvraag();
-        	liftAanvraag();
-        	motorAansturing();
-        	lift.setMotorSpeed(liftSnelheid);
-        	lift.setMotorDirection(motorRichting);
-        	sleep(1);
-        }
-    }
-    
+	}   
     
   
  
