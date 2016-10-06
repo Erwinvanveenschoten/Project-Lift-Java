@@ -18,32 +18,6 @@ import lift.lib.inf.iLiftKooi;
 
 public class Controller
 {
-
-    /**
-     * static void main() is de methode waar alle java programma's mee
-     * opstarten.
-     * 
-     **/
-    /* Objecten om met de kooi en lift te communiceren */ 
-	static iLiftKooi kooi;
-    static iLift lift;
-	
-	public static void main( String[] args )
-    {
-        /* Communicatie objecten aanmaken */
-        kooi = Factory.getLiftKooi("sim");
-        lift = Factory.getLift();
-        while (true){
-        	sleep(50);
-        	HuidigeLocatie();
-        	kooiAanvraag();
-        	liftAanvraag();
-        	motorAansturing();
-        	lift.setMotorSpeed(motorspeed);
-        	lift.setMotorDirection(motorRichting);
-        }
-    }
-	
 	// Variabelen voor motoraansturing
 	static int motorspeed = 0;
 	static boolean motorRichting = true;
@@ -55,6 +29,29 @@ public class Controller
 	
 	// Variabele voor de huidige locatie
 	static int huidigeLocatie = 1;
+
+    /* Objecten om met de kooi en lift te communiceren */ 
+	static iLiftKooi kooi;
+    static iLift lift;
+
+    //Main loop waar alle benodigde functies aangeroepen worden in een oneindige lus.
+	public static void main( String[] args )
+    {
+        /* Communicatie objecten aanmaken */
+        kooi = Factory.getLiftKooi("sim");
+        lift = Factory.getLift();
+        while (true){
+        	sleep(50);
+        	HuidigeLocatie();
+        	kooiAanvraag();
+        	liftAanvraag();
+        	motorAansturing();
+        	ledbesturing();
+        	LiftDeuren();
+        	lift.setMotorSpeed(motorspeed);
+        	lift.setMotorDirection(motorRichting);
+        }
+    }
 	
 	//Functie om de huidige locatie van de lift op te vragen.
 	public static void HuidigeLocatie(){
@@ -64,25 +61,25 @@ public class Controller
 		switch(RawLocatie){
 		case 0: Nieuw = 0; // Te laag
 				break;
-		case 1: Nieuw = 1; // Exact verdieping 0
+		case 1: Nieuw = 1; // Exact huidigeLocatie0
 				break;
-		case 3: Nieuw = 2; // Net boven verdieping 0
+		case 3: Nieuw = 2; // Net boven huidigeLocatie0
 				break;
-		case 2: Nieuw = 3; // Tussen verdieping 0 en 1
+		case 2: Nieuw = 3; // Tussen huidigeLocatie0 en 1
 				break;
-		case 6: Nieuw = 4; // Net onder verdieping 1
+		case 6: Nieuw = 4; // Net onder huidigeLocatie1
 				break;
-		case 7: Nieuw = 5; // exact verdieping 1
+		case 7: Nieuw = 5; // exact huidigeLocatie1
 				break;
-		case 5: Nieuw = 6; // Net boven Verdieping 1
+		case 5: Nieuw = 6; // Net boven huidigeLocatie1
 				break;
-		case 4: Nieuw = 7; // Tussen verdieping 1 en 2
+		case 4: Nieuw = 7; // Tussen huidigeLocatie1 en 2
 				break;
-		case 12: Nieuw = 8; // Net onder verdieping 2
+		case 12: Nieuw = 8; // Net onder huidigeLocatie2
 				break;
-		case 13: Nieuw = 9; // exact verdieping 2
+		case 13: Nieuw = 9; // exact huidigeLocatie2
 				break;
-		case 15: Nieuw = 10; // Net boven verdieping 2
+		case 15: Nieuw = 10; // Net boven huidigeLocatie2
 				break;
 		case 14: Nieuw = 11; // Te hoog
 				break;
@@ -154,20 +151,20 @@ public class Controller
 	}
 	
 	//Functie om de leds aan te sturen.
-	public static void ledbesturing(int verdieping){
+	public static void ledbesturing(){
 		    
-			//als de lift op verdieping 0 is laat 0 zien op het display
-			if ((verdieping > 0) && (verdieping < 4)){
+			//als de lift op huidigeLocatie0 is laat 0 zien op het display
+			if ((huidigeLocatie> 0) && (huidigeLocatie< 4)){
 				kooi.setLeds(63);
 			}
 			
-			//als de lift op verdieping 1 is laat 1 zien op het display
-			else if ((verdieping > 3) && (verdieping < 8)){
+			//als de lift op huidigeLocatie1 is laat 1 zien op het display
+			else if ((huidigeLocatie> 3) && (huidigeLocatie< 8)){
 				kooi.setLeds(6);
 			}
 			
-			//als de lift op verdieping 2 is laat 2 zien op het display
-			else if ((verdieping > 7) && (verdieping < 11)){
+			//als de lift op huidigeLocatie2 is laat 2 zien op het display
+			else if ((huidigeLocatie> 7) && (huidigeLocatie< 11)){
 				kooi.setLeds(91);
 			}
 			
@@ -273,18 +270,23 @@ public class Controller
 		}
 
 	}   
+
+	//Methode om de deuren te openen en te sluiten bij aankomst van juiste verdieping
+	public static boolean LiftDeuren(){
+		lift.setDoorOpen();
+		sleep(5000);
+		lift.setDoorClose();
+		sleep(5000);
+		if(lift.getDoorSignals()==2){
+			return true;
+		}
+		else{
+			return false;
+		}
+		
+	}
     
-  
- 
-   
-    
-    /**
-     * De methode zorgt dat het huidige proces stopt gedurende de tijd
-     * die wordt opgegeven
-     * 
-     * @param msec Aantal millisec  
-     */
-    private static void sleep( int msec )
+	private static void sleep( int msec )
     {
         try
         {
