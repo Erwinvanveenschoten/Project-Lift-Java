@@ -179,6 +179,7 @@ public class Controller
 			if (liftvraag0 == true){
 				liftvraag0 = false;
 				motorspeed = 0;
+				lift.setMotorSpeed(motorspeed);
 				while (true){
 					lift.setDoorOpen();
 					sleep(5000);
@@ -211,6 +212,7 @@ public class Controller
 			if (motorRichting == true){
 				if (liftvraag1 == true && motorspeed != 6){
 					motorspeed = 0;
+					lift.setMotorSpeed(motorspeed);
 					while (true){
 						lift.setDoorOpen();
 						sleep(5000);
@@ -237,6 +239,7 @@ public class Controller
 				}
 				if (liftvraag1 == true && motorspeed == 2){
 					motorspeed = 0;
+					lift.setMotorSpeed(motorspeed);
 					while (true){
 						lift.setDoorOpen();
 						sleep(5000);
@@ -283,6 +286,7 @@ public class Controller
 		if (huidigeLocatie == 9){
 			if (liftvraag2 == true){
 				motorspeed = 0;
+				lift.setMotorSpeed(motorspeed);
 				while (true){
 					lift.setDoorOpen();
 					sleep(5000);
