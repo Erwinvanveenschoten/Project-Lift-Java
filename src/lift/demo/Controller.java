@@ -295,7 +295,7 @@ public class Controller
 		sleep(5000);
 		lift.setDoorClose();
 		sleep(5000);
-		if(lift.getDoorSignals()==2){
+		if(lift.getDoorSignals()==0){
 			return true;
 		}
 		else{
