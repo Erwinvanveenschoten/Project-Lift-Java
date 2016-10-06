@@ -204,7 +204,12 @@ public class Controller
 			if (motorRichting == true){
 				if (liftvraag1 == true && motorspeed != 6){
 					motorspeed = 0;
-					LiftDeuren();
+					while (true){
+						boolean deurstatus = LiftDeuren();
+						if (deurstatus == true){
+							break;
+						}
+					}
 					liftvraag1 = false;
 				}
 				if(liftvraag2 == true && motorspeed == 6){
@@ -223,7 +228,12 @@ public class Controller
 				}
 				if (liftvraag1 == true && motorspeed == 2){
 					motorspeed = 0;
-					LiftDeuren();
+					while (true){
+						boolean deurstatus = LiftDeuren();
+						if (deurstatus == true){
+							break;
+						}
+					}
 					liftvraag1 = false;
 				}
 				if (liftvraag0 == true){
@@ -262,7 +272,12 @@ public class Controller
 		if (huidigeLocatie == 9){
 			if (liftvraag2 == true){
 				motorspeed = 0;
-				LiftDeuren();
+				while (true){
+					boolean deurstatus = LiftDeuren();
+					if (deurstatus == true){
+						break;
+					}
+				}
 				liftvraag2 = false;
 				motorRichting = false;
 			}
