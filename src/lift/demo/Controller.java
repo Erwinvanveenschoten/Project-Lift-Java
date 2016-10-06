@@ -47,7 +47,6 @@ public class Controller
         	liftAanvraag();
         	motorAansturing();
         	ledbesturing();
-        	LiftDeuren();
         	lift.setMotorSpeed(motorspeed);
         	lift.setMotorDirection(motorRichting);
         }
@@ -180,6 +179,7 @@ public class Controller
 			if (liftvraag0 == true){
 				liftvraag0 = false;
 				motorspeed = 0;
+				LiftDeuren();
 				motorRichting = true;
 			}
 			else if (liftvraag1 == true || liftvraag2 == true){
@@ -204,6 +204,7 @@ public class Controller
 			if (motorRichting == true){
 				if (liftvraag1 == true && motorspeed != 6){
 					motorspeed = 0;
+					LiftDeuren();
 					liftvraag1 = false;
 				}
 				if(liftvraag2 == true && motorspeed == 6){
@@ -222,6 +223,7 @@ public class Controller
 				}
 				if (liftvraag1 == true && motorspeed == 2){
 					motorspeed = 0;
+					LiftDeuren();
 					liftvraag1 = false;
 				}
 				if (liftvraag0 == true){
@@ -260,6 +262,7 @@ public class Controller
 		if (huidigeLocatie == 9){
 			if (liftvraag2 == true){
 				motorspeed = 0;
+				LiftDeuren();
 				liftvraag2 = false;
 				motorRichting = false;
 			}
